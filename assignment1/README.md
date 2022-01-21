@@ -5,4 +5,4 @@ If we are creating a connection between client and server using TCP then it has 
 A simple TCP client-server program written in C. In this program the client read a file and send its data to server. The server then receives the data and write it in a text file.
 
 ## Demo
-![demo image](test.png)
+![demo image](images/test.png)
