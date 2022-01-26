@@ -34,7 +34,7 @@
  ![NSLOOKUP](images/nslookup.png)
  
  - *NETSTAT* - The `netstat` command generates displays that show network status and protocol statistics. You can display the status of TCP and UDP endpoints in table format, routing table information, and interface information. `netstat` displays various types of network data depending on the command line option selected.
- ![NETSTAT](images/netstat.png)
+ ![NETSTAT](images/net.png)
   
  - *SNOOP* - The `snoop` command is used to monitor packets on the network. The snoop command must be run as the root user. The use of this command is a good way to ensure that the network hardware is functioning on both the client and the server.
  ![SNOOP](images/snoop.png)
