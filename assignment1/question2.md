@@ -22,14 +22,25 @@
 
  ## Terms and Protocols
  - *ARP* - The `Address Resolution Protocol(ARP)` is a communication protocol used to discover the data-link layer address(Layer 2 address like Media Access Control(MAC) address) associated with an Internet layer address(Layer 3 address like IPv4 address). 
- - *IPCONFIG* - `ipconfig` stands for Internet Protocol Configuration. This command is used to view all the current TCP/IP network configurations values of the computer.
- - *IFCONFIG* - `ifconfig` stands for Interface Configuration. This command is the same as ipconfig, and is used to view all the current TCP/IP network configurations values of the computer.
- - *Tracert* - The Windows `Tracert` tool determines the route to a destination by sending ICMP packets to the destination. In these packets, Tracert uses varying IP Time-To-Live (TTL) values.
- - *Traceroute* - `Traceroute` is the route tracing tool used on Unix-like Operating Systems (including Mac OS X). On Mac OS X, you can access Traceroute through the Network Utility.
+ ![ARP](images/arp.png)
+ 
+ - *IPCONFIG* - `ipconfig` stands for Internet Protocol Configuration. This command is used to view all the current TCP/IP network configurations values of the computer.*IFCONFIG* - `ifconfig` stands for Interface Configuration. This command is the same as ipconfig, and is used to view all the current TCP/IP network configurations values of the computer.
+ ![IFCONFIG](images/ifconfig.png)
+ 
+ - *TRACERT* - The Windows `Tracert` tool determines the route to a destination by sending ICMP packets to the destination. In these packets, Tracert uses varying IP Time-To-Live (TTL) values. *TRACEROUTE* - `Traceroute` is the route tracing tool used on Unix-like Operating Systems (including Mac OS X). On Mac OS X, you can access Traceroute through the Network Utility.
+ ![TRACEROUTE](images/traceroute.png)
+ 
  - *NSLOOKUP* - `nslookup` (from name server lookup) is a network administration command-line tool for querying the Domain Name System (DNS) to obtain the mapping between domain name and IP address, or other DNS records.
- - *NETSTAT* - The `netstat` command generates displays that show network status and protocol statistics. You can display the status of TCP and UDP endpoints in table format, routing table information, and interface information. `netstat` displays various types of network data depending on the command line option selected. 
+ ![NSLOOKUP](images/nslookup.png)
+ 
+ - *NETSTAT* - The `netstat` command generates displays that show network status and protocol statistics. You can display the status of TCP and UDP endpoints in table format, routing table information, and interface information. `netstat` displays various types of network data depending on the command line option selected.
+ ![NETSTAT](images/netstat.png)
+  
  - *SNOOP* - The `snoop` command is used to monitor packets on the network. The snoop command must be run as the root user. The use of this command is a good way to ensure that the network hardware is functioning on both the client and the server.
- - *TCPDUMP* - `tcpdump` is a data-network packet analyzer computer program that runs under a command line interface. It allows the user to display TCP/IP and other packets being transmitted or received over a network to which the computer is attached
+ ![SNOOP](images/snoop.png)
+ 
+ - *TCPDUMP* - `tcpdump` is a data-network packet analyzer computer program that runs under a command line interface. It allows the user to display TCP/IP and other packets being transmitted or received over a network to which the computer is attached.
+ ![TCPDUMP](images/tcpdump.png)
 
 
  
