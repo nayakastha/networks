@@ -44,7 +44,7 @@ int main()
             }else{
               cout<<"Bit \""<<frames[i]<<"\" is corrupted"<<endl;
               cout<<"Received Frames - ";
-              for(int j=0; j<=i; j++ )
+              for(int j=0; j<i; j++ )
               cout<<receiver[j]<<" ";
               cout<<endl<<endl;
             }
