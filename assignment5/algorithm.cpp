@@ -1,164 +1,205 @@
-#include <bits/stdc++.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <time.h>
-#include <chrono>
-
+#include<iostream>
+#include<math.h>
+#include<conio.h>
+#include<time.h>
+#include<stdlib.h>
 using namespace std;
 
-vector <int> w;
-vector <int> backoff;
-vector <int> buffer_entries;
-vector <int> currtransmissions;
-vector <int> buffers;
-vector <pair<float, float> >timeofgen;
+int k = 1, Time[10], curr_time = 1, sent[10], ready[10], in[10], i1 = 0, ct = 0, coll = 0, s = 0;
+int pA_cpt = 0, sA_cpt = 0; //completion times for pure Aloha and slotted Aloha respectively
 
-int main(int argc, char const *argv[]){
-
-	int N = atoi(argv[2]);
-
-	int W = atoi(argv[4]); 
-
-	float packetgenrate = atof(argv[6]);
-
-	int MAX_PACKETS = atoi(argv[8]);
+//function to implement pure Aloha
+void pureAloha(int n) {
+  
+  int i;
+  cout << "The Frame time assumed is 2 seconds\n\n";
+  
+  for(i = 0; i < n; i++) {
+	Time[i] = (rand()%10+1);
+	sent[i] = 0;  
+	ready[i] = 0;
+	cout << "Sender Station " << i+1 << " will send frame at t = " << Time[i] << "seconds.\n";
+  }
+  while(s == 0) {
+  
+  	for(i = 0; i < n; i++) {
+		if(curr_time == Time[i] && sent[i] == 0)
+			ready[i] = 1;
+  	}
+  
+  	for(i = 0; i < n; i++) {
 	
-	int simtime = 0;
-
-	w.resize(N, W);
-	backoff.resize(N,0);
-	buffer_entries.resize(N,0);
-	timeofgen.resize(N, make_pair(0,0));
-	currtransmissions.resize(N,0);
-	buffers.resize(N,0);
-
-
-	for(int i = 0; i < N; i++)
-	{
-		backoff[i] = rand() % w[i];
-	}
-
-	int packetssent = 0;
-	float total_waittime_cumulative = 0.00;
-
-    //also terminate if maximum retransimssions for any packet exceeds 10
-	auto start = chrono::steady_clock::now();
-	while(packetssent <= MAX_PACKETS )
-	{
-
-		//usleep(2000 * 1000);
-		int transmissionsnow = 0;
-		int firstuser = -1;
-
-		cout << endl<< endl<< endl<< endl;
-		cout << "at time t : " << simtime << endl;
-
-
-		cout << "The Buffers are : ";
-		for(int i = 0; i <N; i++)
-		{
-			cout << buffers[i]<<" ";
+		if(ready[i] == 1 && ct == 0) {
+		
+			ct = 1;
+			in[i1] = i;
+			i1++;
 		}
-		cout <<endl;
-
-
-
-
-		cout << "The backoffs are : ";
-		for(int i = 0; i <N; i++)
-		{
-			cout << backoff[i]<<" ";
+	 
+		else if(ready[i] == 1 && ct == 1) {
+		
+			coll = 1;
+			in[i1] = i;
+			i1++;
 		}
-		cout <<endl;
-
-
-
-		for(int i = 0; i < N; i++)
-		{
-			if(backoff[i] == 0)
-			{
-				if(buffers[i] == 0 && (rand()%10000)/10000.0000 < packetgenrate)
-				{
-					buffers[i] = 1;
-					cout << i << " made a packet " << endl;
-					auto end = chrono::steady_clock::now();
-					timeofgen[i] = make_pair(chrono::duration_cast<chrono::milliseconds>(end - start).count(),0);
-					//rtt[nom] = chrono::duration_cast<chrono::milliseconds>(end - start).count() - a[nom];
-				}	
-				else if(buffers[i] == 1 && (rand()%10)/10 < packetgenrate)
-				{
-					buffers[i] = 2;
-					cout << i << " made a packet " << endl;
-
-					auto end = chrono::steady_clock::now();
-					timeofgen[i] = make_pair(timeofgen[i].first,chrono::duration_cast<chrono::milliseconds>(end - start).count());
-				}
-				if(buffers[i] != 0)
-				{	
-					cout<<" "<<i<< " transmitted "<< endl;
-					currtransmissions[i] = 1;
-					transmissionsnow ++;
-					if(transmissionsnow == 1)
-					{
-						firstuser = i;
-					}
-					//buffers[i] --;
-				}
-			}
-			cout << endl;
+  	}
+  	for(i = 0; i < n; i++) {
+	
+		if(Time[i] == curr_time+1 && sent[i] == 0 && ct == 1) {
+		
+			in[i1] = i;
+			i1++;
+			coll = 1;
 		}
-
-		if(transmissionsnow == 1)
-		{
-			backoff[firstuser] = 0;
-			int nearestint =  w[firstuser]*0.75;
-			w[firstuser] = max(2,nearestint);
-			cout << "transmission of user : "<< firstuser << " is successful at time : "<< simtime <<endl;
-			packetssent++;
-
-			if(buffers[firstuser] == 1)
-			{
-				total_waittime_cumulative += timeofgen[firstuser].first;
-				timeofgen[firstuser] = make_pair(0.00,0.00);
-			}
-			else if(buffers[firstuser] == 2)
-			{
-				total_waittime_cumulative += timeofgen[firstuser].first;
-				timeofgen[firstuser] = make_pair(timeofgen[firstuser].second,0.00);
-			}
-			buffers[firstuser]--;
-
-		}
-
-		else
-		{
-			for(int i = 0; i < N; i++)
-			{
-				if(currtransmissions[i] == 1)
-				{
-					w[i] = min(w[i] * 2, 256);
-					backoff[i] = rand() % w[i];
-				}
-			}
-			cout << "all the users at time : " << simtime << " failed" << endl;
-		}
-
-
-		for(int i = 0; i < N; i++)
-		{
-			if(backoff[i] > 0)
-			{
-				backoff[i]--;
-			}
-		}
-
-		simtime ++;
-		fill(currtransmissions.begin(), currtransmissions.end(), 0);
-	}
-
-	cout <<"Number of users : " <<N <<endl <<"W : "<< W<<endl <<"Packet generation rate : "<< packetgenrate << endl;
-	cout << "Utilization : "<< packetssent * 1.00/simtime << endl;
-	cout << "Average Packet Delay : " << total_waittime_cumulative * 1.00000 / packetssent << endl;
-
-	return 0;
+  	}
+  
+  	if(coll == 1) {
+		cout << "Collision Occured at senders\n";
+  
+  		for(i = 0; i <= i1-1; i++) {
+    
+			Time[in[i]] = Time[in[i]] + k;
+    		cout <<"\t" << in[i] + 1;
+    		k = k*2;
+  		}
+  	
+		if(i1 > 1)
+			cout << "\nThe new time for the collided senders are:\n";
+  
+  		for(i = 0; i <= i1-1; i++) {
+	
+			cout << "Sender Station" << in[i]+1 << " -> " << Time[in[i]] << "\n";
+  		}
+  	}
+  
+  	if(coll != 1 && ct == 1) {
+	
+		sent[in[i1-1]] = 1;
+		cout << "Sender Station" << in[i1-1]+1 << " has sent the packet\n\n";
+		s = 1;
+  	}
+  	
+	for(i = 0; i < n; i++) {
+	
+		if(sent[i] == 0)
+			s = 0;
+  	}
+ 	curr_time++;
+  
+ 	for(i = 0; i < n; i++)
+		ready[i] = 0;
+  
+  	ct = 0;
+  	coll = 0;
+  	i1 = 0;
+ 	}
+  
+  	//total completion time 
+  	for(i = 0; i < n; i++)
+  		pA_cpt = max(pA_cpt, Time[i]);
 }
+
+//function to implement slotted Aloha protocol
+void slottedAloha(int n) {
+  
+  int i;
+  cout <<"The Frame time assumed is 1 second\n\n";
+  
+  for(i = 0; i < n; i++) {
+	
+	Time[i] = (rand()%10+1);
+	sent[i] = 0;  
+	ready[i] = 0;
+	cout << "Sender Station" << i+1 << " will send the frame at t = " << Time[i] << "seconds.\n";
+  }
+  while(s == 0) {
+  	for(i = 0; i < n; i++) {
+		if(curr_time == Time[i] && sent[i] == 0)
+			ready[i] = 1;
+  	}
+  
+  	for(i = 0; i < n; i++) {
+		
+		if(ready[i] == 1 && ct == 0) {
+			ct = 1;
+			in[i1] = i;
+			i1++;
+	 	}
+	 	
+		else if(ready[i] == 1 && ct == 1) {
+			coll = 1;
+			in[i1] = i;
+			i1++;
+	 	}
+  	}	
+  
+  	if(coll == 1) {
+	 	cout << "\nCollision Occured at senders\n";
+  		for(i = 0; i <= i1-1; i++) {
+	 	
+			Time[in[i]] = Time[in[i]]+k;
+	 		cout << "\t" << in[i]+1;
+	 		k = k*2;
+  		}
+  	
+		if(i1 > 1)
+	 		cout << "\nThe new time for the collided senders are:\t";
+  			for(i = 0; i <= i1-1; i++){
+	 
+	 			cout << "\nSender Station" << in[i]+1 << " -> " << Time[in[i]];
+  		}
+  	}
+  	
+	if(coll != 1 && ct == 1) {
+	 	sent[in[i1-1]] = 1;
+	 	cout << "\nSender Station" << in[i1-1]+1 << " has sent the packet";
+	 	s = 1;
+  	}
+  	for(i = 0; i < n; i++) {
+	 
+		if(sent[i] == 0)
+			s = 0;
+  	}
+  
+  	curr_time++;
+  	for(i = 0; i < n; i++)
+		ready[i] = 0;
+  
+  	ct = 0;
+  	coll = 0;
+  	i1 = 0;
+  }
+  
+  //total completion time 
+  for(i = 0; i < n; i++)
+  	sA_cpt = max(sA_cpt, Time[i]);
+}
+
+//main function
+int main() {
+  
+  srand(time(0));
+  int no_of_senders;
+  double g_avg;
+  cout << "Enter the # of senders : ";
+  cin >> no_of_senders;
+  
+  cout << "Implementing Pure Aloha protocol:\n";
+  pureAloha(no_of_senders);
+  cout << "\nG_average : ";
+  g_avg = (double)(2*no_of_senders)/pA_cpt;
+  cout << g_avg << endl;
+  cout << "Throughput achieved by Pure Aloha : " << (double)(g_avg * expf(-2*g_avg)) << endl;
+  
+  cout << "\nImplementing Slotted Aloha protocol:\n";
+  slottedAloha(no_of_senders);
+  cout << "\nG_average : ";
+  g_avg = (double)no_of_senders/sA_cpt;
+  cout << g_avg << endl;
+  cout << "Throughput achieved by Slotted Aloha : " << (double)(g_avg * expf(-g_avg)) << endl;
+  
+  
+  cout << "\n-------End of Program-------\n";
+  getch();
+  return 0;}
+  
