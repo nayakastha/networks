@@ -1,0 +1,3 @@
+# COLLISON FREE PROTOCOLS
+In computer networks, when more than one station tries to transmit simultaneously via a shared channel, the transmitted data is garbled. This event is called collision. The Medium Access Control (MAC) layer of the OSI model is responsible for handling collision of frames. Collision – free protocols are devised so that collisions do not occur. Protocols like CSMA/CD and CSMA/CA nullifies the possibility of collisions once the transmission channel is acquired by any station. However, collision can still occur during the contention period if more than one stations starts to transmit at the same time. Collision – free protocols resolves collision in the contention period and so the possibilities of collisions are eliminated.
+
