@@ -26,3 +26,4 @@ Limitations of Flooding
 - The network may be clogged with unwanted and duplicate data packets. This may hamper delivery of other data packets.
 
 ### Compare flooding with deterministic (k=1) in terms of both delay and bandwidth used
+In case of deterministic routing, the packets are sent to the next hop only. In case of flooding, the packets are sent to all the outgoing links except the one it has arrived on. The bandwidth utilisation is higher in case of flooding, but the delay is lower.
