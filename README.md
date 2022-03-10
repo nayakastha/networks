@@ -10,3 +10,4 @@ Computer Network uses distributed processing in which task is divided among seve
 4. [Transmission Protocols - Sliding Window using Selective Repeat](https://github.com/nayakastha/networks/tree/main/assignment4)
 5. [MAC SubLayer Protocol - Pure ALOHA and Slotted ALOHA](https://github.com/nayakastha/networks/tree/main/assignment5)
 6. [Collision Free Protocols - Bit Map and Token Bus](https://github.com/nayakastha/networks/tree/main/assignment6)
+7. [Routing Protocol - Flooding and Distance Vector](https://github.com/nayakastha/networks/tree/main/assignment7)
