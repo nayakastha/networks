@@ -1,80 +1,101 @@
-#include <bits/stdc++.h>
-
+/* Program to simulate routing using Flooding */ 
+#include<bits/stdc++.h>
+#include<stdio.h>
 using namespace std;
 
-/*hopCount function will decide the life time for frame to live in network*/
-int hopCount(int m[10][10], int n){
-        int h=0;
-        for(int i=1;i<=n;i++){
-            for(int j=1;j<=n;j++){
-                h += m[i][j];
-            }
-        }
-        h -= n;
-        h = ((h % 2) == 0) ? ( h/2 ):( h/2+1 );
-        return h;
-}
+//packet structure definition
+class packet {
+    public:
+	int ttl, st;
+    string path;
+};
 
-/*this function show the network in matrix form which you entered*/
-void showNetworkMatrix(int m[10][10], int n){
-        cout<<"\n\nNetwork Matrix 1st row and colomn showing nodes(or hops) id\n\n";
+//function to implement flooding through all lines
+void all_path(vector<vector<int> > g, int s, int d, packet p) {
+    
+    p.path += " -> " + to_string(s);
+	if(s == d) {
+		
+		p.path += " -> _|_"; //reached destination
+        cout << p.path << endl;
+        return;
+    }
+    
+    if(p.ttl == 0)
+        return;
         
-        for(int i=0;i<=n;i++){
-            for(int j=0;j<=n;j++){
-                if(i==0 && j==0)
-                    cout<<"nodes-   ";
-                else if(j==0)
-                    cout<<m[i][j]<<"        ";
-                else 
-                    cout<<m[i][j]<<"    ";
-            }
-            cout<<endl;
-        }
+    p.ttl -= 1;
+    p.st = s;
+    
+	for(int i = 0; i <= 4; i++)
+        if(g[s][i] == 1)
+            all_path(g, i, d, p);
+        
 }
 
-void check(int m[10][10], int n, int ps, int s, int d, int h){ 
-     //m-network matrix 
-     //n-number of nodes 
-     //ps - denoted previous node
-     //s-new source node 
-     //d- destination node
-     //h- time remain to live in network
-        int i = s;
-        if(h==0||s==d)
-            return;
-        for(int j=1;j<=n;j++){
-            if(m[i][j]==1&&j!=i&&j!=ps) 
-                cout<<j<<"    ";
-        }
-        cout<<"\n\n";
-        for(int j=1;j<=n;j++){
-            if(m[i][j] == 1 && j != i && j != ps) 
-                check(m, n, s, j, d, (h-1));
-        }
+//function to implement flooding through all lines except incoming line used by packet
+void all_path_except_source(vector<vector<int> > g, int prev, int s, int d, packet p) {
+    
+    p.path += " -> " + to_string(s);
+	if(s == d) {
+		
+		p.path += " -> _|_"; //reached destination
+        cout << p.path << endl;
+        return;
+    }
+    
+    if(p.ttl == 0)
+        return;
+        
+    p.ttl -= 1;
+    p.st = s;
+    
+	for(int i = 0; i <= 4; i++)
+        if(g[s][i] == 1 && prev != i)
+            all_path_except_source(g, s, i, d, p);
+        
 }
 
-void FloodAlgo(int m[10][10], int n, int s, int d, int h){
-        cout<<"\n\n"<<s<<"\n\n";
-        check(m, n, 0, s, d, h); 
-        //check function search the next node and repeat till it not got the destination address or hopcount will become zero;
+//function to implement flooding through choosen best k lines
+void all_path_best(vector<vector<int> > g, int s, int d, packet p, vector<vector<bool> > b) {
+    
+    p.path += " -> " + to_string(s);
+	if(s == d) {
+	
+        p.path += " -> _|_"; //reached destination
+		cout << p.path << endl;
+        return;
+    }
+    
+    if(p.ttl == 0)
+        return;
+        
+    p.ttl -= 1;
+    p.st = s;
+    
+	for(int i = 0; i <= 4; i++)
+        if(g[s][i] == 1 && b[s][i])
+            all_path_best(g, i, d, p, b);
+        
 }
 
-
-int main()
-{
-        cout<<"Enter Number of nodes in network:    ";
-        int n;
-        cin>>n;
-        /*1 stands for a connection and 0 stands for not connection between two nodes */
-        cout<<"Enter the network Matrix    with(0 and 1):"<<endl;
-        int network[10][10];
+//main function
+int main() {
+    
+    cout<<"Enter Number of nodes in network:    ";
+    int n;
+    cin>>n;
+       
+    cout<<"Enter the network Matrix    with(0 and 1):"<<endl;
+    vector<vector<int> > graph(n+1, vector<int>(n+1,0));
         
         /*first row and colmn contains nodes(hops) number starting from 1 to n */
         for(int i=1;i<=n;i++){
-            network[0][i]=i;
-            network[i][0]=i;
+            graph[0][i]=i;
+            graph[i][0]=i;
         }
         /*this is matrix containing the inmforation about connection between hops*/
+        /*1 stands for a connection and 0 stands for not connection between two nodes */
         for(int i=1;i<=n;i++){
             cout<<"Row no: "<<i<<endl;
             for(int j=1;j<=n;j++){
@@ -82,35 +103,63 @@ int main()
                 int c;
                 cin>>c;
                 if(c==0||c==1)    
-                    network[i][j] = c;
+                    graph[i][j] = c;
                 else {
                     cout<<"You entered Other than 0 or 1.\n Enter again.";
                     j -= 1;
                 }
             }
-        }
-        showNetworkMatrix(network,n);
-        int h = hopCount(network,n);
-        cout<<"Maximum Life of frame : "<<h<<endl;
-        int c;
-        do{
-            cout<<" Enter the source node id : ";
-            cin>>c;
-            if(c==0||c>n)
-                cout<<"Entered wrong id number not available in network.try again.\n Re";
-       
-        }while(c==0||c>n);
-        int s=c; //source node id variable
-        do{
-            cout<<" Enter the destination node id : ";
-            cin>>c;
-            if(c==0||c>n)
-                cout<<"Entered wrong id number not available in network.try again.\n Re";
-       
-        }while(c==0||c>n);
-        int d = c; //destination node id variable
-        FloodAlgo(network,n,s,d,h);
-        return 0;
     }
-
- 
+    
+    int i = 0, j = 1;
+    while(i < n+1){
+        j = i+1;
+        while(j < n+1){
+            if(graph[i][j] == 1)
+                graph[j][i] = 1;
+            
+			j++;
+        }
+        i++;
+    }
+    
+    vector<vector<bool> > best(n, vector<bool>(n,0));
+    int k = 2;
+	i = 0;
+    
+	while(i < n+1){
+        k = 2;
+        j = i+1;
+        while(j < n+1 && graph[i][j] == 1 && k > 0){
+            best[i][j] = best[j][i] = 1;
+            k--;
+            j++;
+        }
+        i++;
+	}
+    
+    packet p;
+    p.ttl = 3;
+    p.st = 0;
+    p.path = "Path followed ";
+    cout << "Flooding through all lines:\n";
+    all_path(graph, 0, 4, p);
+    cout << endl;
+    
+    p.ttl = 3;
+    p.st = 0;
+    p.path = "Path followed ";
+    cout << "Flooding through all lines except incoming line:\n";
+    all_path_except_source(graph, -1, 0, 4, p);
+    cout << endl;
+    
+    p.ttl = 3;
+    p.st = 0;
+    p.path = "Path followed ";
+    cout << "Flooding through best k lines:\n";
+    all_path_best(graph, 0, 4, p, best);
+    cout << endl;
+    cout << "---------End of Program---------\n\n";
+    return 0;
+}
+//end of main

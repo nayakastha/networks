@@ -1,8 +1,6 @@
 # FLOODING ROUTING TECHNIQUE
 Flooding is a non-adaptive routing technique following this simple method: when a data packet arrives at a router, it is sent to all the outgoing links except the one it has arrived on. For example, let us consider the network in the figure, having six routers that are connected through transmission lines.
 
-
-
 Using flooding technique −
 An incoming packet to A, will be sent to B, C and D.
 B will send the packet to C and E.
@@ -26,3 +24,5 @@ Limitations of Flooding
 - Flooding tends to create an infinite number of duplicate data packets, unless some measures are adopted to damp packet generation.
 - It is wasteful if a single destination needs the packet, since it delivers the data packet to all nodes irrespective of the destination.
 - The network may be clogged with unwanted and duplicate data packets. This may hamper delivery of other data packets.
+
+### Compare flooding with deterministic (k=1) in terms of both delay and bandwidth used
