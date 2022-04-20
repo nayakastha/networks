@@ -13,3 +13,4 @@ Computer Network uses distributed processing in which task is divided among seve
 7. [Routing Protocol - Flooding and Distance Vector](https://github.com/nayakastha/networks/tree/main/assignment7)
 8. [Shortest Path Routing Algorithm](https://github.com/nayakastha/networks/tree/main/assignment8)
 9. [Link State Routing Algorithm vs. Distance Vector Routing Algorithm](https://github.com/nayakastha/networks/tree/main/assignment9)
+10. [Traffic Shaping Algorithm - Leaky Bucket Algorithm, Token Bucket Algorithm](https://github.com/nayakastha/networks/tree/main/assignment10)
